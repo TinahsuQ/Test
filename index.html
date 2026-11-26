@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>昀希寒假營隊規劃</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: friendly family planner, clear for parents, a little playful for a kid
+   IDEA: the winter-break wall calendar on the fridge, camps stuck on as coloured stickers
+   PICTURE: the live two-week calendar 1/21–2/3 with conflict marks, total cost beside it
+   COLOUR and TYPE: deep winter navy + snow white, sunshine yellow accent; Noto Sans TC + Fredoka numerals
+   LAYOUT: navy header band, calendar first, then picker, camp details, things to confirm */
+:root{color-scheme:light dark;--bg:light-dark(#f3f7ff,#0b1430);--card:light-dark(#fff,#13204a);--ink:light-dark(#0f1d3d,#e9effd);--mute:light-dark(#55627f,#a9b6d6);--line:light-dark(#d9e2f4,#26366a);--navy:#1c3d8f;--sun:#ffd23f;--bad:light-dark(#d1293d,#ff6b7d);
+--hc:#2f6fd6;--lk:#7048c8;--tp:#b4472f;--kuo:#0f8b8d;--top:#e8662a;--eng:#5b7d00;--dream:#d63d78}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.num{font-family:Fredoka,"Noto Sans TC",sans-serif;font-weight:600;white-space:nowrap}
+header{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+header h1{font-size:clamp(30px,5vw,50px);line-height:1.08;margin:0 0 10px;font-weight:900;text-wrap:balance}
+header p{margin:0;color:#dfe7ff;max-width:60ch}
+.chip{display:inline-block;background:var(--sun);color:#1b2240;border-radius:999px;padding:4px 14px;font-weight:700;margin-bottom:14px}
+.flakes{position:absolute;right:-20px;top:-10px;width:260px;opacity:.18;pointer-events:none}
+.alert{margin-top:18px;background:#fff;color:#1b2240;border-radius:14px;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;max-width:720px}
+.alert b.num{font-size:28px;color:#c2410c}
+h2{font-size:clamp(24px,3vw,32px);line-height:1.15;margin:0 0 6px;text-wrap:balance}
+.sub{color:var(--mute);margin:0 0 18px}
+.plan{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.cal{background:var(--card);border-radius:18px;padding:14px;border:1px solid var(--line)}
+.wk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.dow{text-align:center;font-weight:700;color:var(--mute);font-size:14px}
+.day{min-height:132px;border-radius:12px;background:light-dark(#f6f9ff,#0f1a3d);padding:8px;border:2px solid transparent}
+.day.off{background:transparent;border:2px dashed var(--line);opacity:.55}
+.day.bad{border-color:var(--bad)}
+.day .d{display:flex;justify-content:space-between;align-items:baseline;font-size:18px}
+.tag{font-size:13px;color:#fff;background:var(--bad);border-radius:6px;padding:0 6px;font-family:"Noto Sans TC";font-weight:700}
+.tag.warn{background:#b45309}
+.st{display:block;border-radius:8px;padding:4px 6px;margin-top:5px;color:#fff;font-size:13px;line-height:1.3}
+.st i{font-style:normal;opacity:.9;display:block}
+.empty{font-size:13px;color:var(--mute);margin-top:6px}
+.side{background:var(--card);border-radius:18px;padding:18px;border:1px solid var(--line);position:sticky;top:12px}
+.total{font-size:clamp(34px,5vw,46px);line-height:1;margin:6px 0 4px}
+.side ul{padding-left:18px;margin:8px 0}
+.side li{margin:4px 0;font-size:15px}
+.ok{color:light-dark(#137a4b,#5fd39a);font-weight:700}
+.badtxt{color:var(--bad);font-weight:700}
+button,select{font:inherit;font-size:16px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 12px}
+button{cursor:pointer;font-weight:700}
+button.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.settings{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:16px}
+.settings label{display:flex;gap:8px;align-items:center}
+.grp{background:var(--card);border-radius:16px;border:1px solid var(--line);margin-bottom:14px;overflow:hidden}
+.grp h3{margin:0;padding:12px 16px;color:#fff;font-size:19px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.grp h3 small{font-weight:500;font-size:14px;opacity:.95}
+.opt{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 16px;border-top:1px solid var(--line)}
+.opt:first-of-type{border-top:0}
+.opt input[type=checkbox]{width:26px;height:26px;margin:0 auto;accent-color:var(--navy)}
+.opt .t{font-weight:700}
+.opt .m{color:var(--mute);font-size:14px}
+.opt select{margin-top:6px;max-width:100%;font-size:15px}
+.opt .p{text-align:right;font-size:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.cd{background:var(--card);border-radius:16px;border:1px solid var(--line);padding:16px 18px;border-top:8px solid}
+.cd h3{margin:0 0 8px;font-size:20px}
+.cd dl{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:4px 10px;margin:0;font-size:15px}
+.cd dt{color:var(--mute)}.cd dd{margin:0}
+.cd a{color:inherit}
+.scroll{overflow-x:auto}
+table.tt{border-collapse:collapse;width:100%;min-width:520px;font-size:14px;margin-top:10px}
+.tt th,.tt td{border:1px solid var(--line);padding:6px;text-align:center}
+.tt th{background:light-dark(#fde7ef,#3a1a2a)}
+.tt td.span{background:light-dark(#f6f9ff,#0f1a3d);color:var(--mute)}
+.todo li{margin:6px 0}
+.flt{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.flt div{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flt span{color:var(--mute);width:3em}
+.flt button{border-radius:999px;font-weight:500}
+.flt button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.mc{background:var(--card);border:1px solid var(--line);border-left:8px solid;border-radius:16px;padding:14px 16px}
+.mc h3{margin:4px 0 8px;font-size:19px;line-height:1.3}
+.mc dl{display:grid;grid-template-columns:3em minmax(0,1fr);gap:3px 10px;margin:0;font-size:15px}
+.mc dt{color:var(--mute)}.mc dd{margin:0}
+.mh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rg{color:#fff;border-radius:6px;padding:0 8px;font-size:13px;font-weight:700}
+.mo{color:var(--mute);font-size:14px}
+.nt{font-size:14px;color:var(--mute);margin:8px 0 0}
+.nt.badtxt{color:var(--bad)}
+.acts{float:right;display:flex;gap:6px;margin:0 0 6px 8px}
+.acts button{min-height:36px;padding:0 10px;font-size:14px;border-radius:999px}
+.acts .fv[aria-pressed=true]{background:var(--sun);color:#1b2240;border-color:#e0b400}
+.acts .dl{color:var(--bad)}
+.mc.fav,.cd.fav{box-shadow:0 0 0 3px var(--sun)}
+.opt.fav{background:light-dark(#fff8d6,#2b2a14)}
+.hid{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:15px}
+.hid:empty{display:none}
+.fl{font-weight:700;margin-top:10px}
+.pk{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.pr button{width:100%;text-align:left;font-weight:500;font-size:15px;padding:8px 12px;line-height:1.35}
+.pr button.pri{font-weight:700}
+.pr select{width:100%;margin-top:6px;font-size:15px}
+
+.kidbtn{display:inline-flex;align-items:center;min-height:48px;margin-top:16px;padding:0 20px;border-radius:999px;background:var(--sun);color:#1b2240;font-weight:900;text-decoration:none;font-size:18px}
+#kidv{display:none;min-height:100vh;background:light-dark(#e8f2ff,#0b1430)}
+body.kid .adult{display:none}body.kid #kidv{display:block}
+.kh{background:linear-gradient(160deg,#2a5bd7,#1c3d8f);color:#fff;padding:20px max(5vw,16px) 28px;border-radius:0 0 32px 32px;position:relative}
+.back{color:#fff;display:inline-flex;min-height:44px;align-items:center;font-weight:700}
+.kt{font:900 clamp(30px,8vw,52px)/1.1 "Noto Sans TC",sans-serif;margin:6px 0 12px}
+.kt span{color:var(--sun)}
+.cd2{display:inline-flex;gap:10px;align-items:baseline;background:#fff;color:#1b2240;border-radius:18px;padding:10px 18px;font-weight:700;transform:rotate(-2deg)}
+.cd2 b{font:600 44px/1 Fredoka,sans-serif;color:#e8662a}
+.kwrap{max-width:760px;margin:0 auto;padding:20px max(4vw,14px) 40px}
+.klegend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.klegend span{display:inline-flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:6px 12px 6px 6px;font-weight:700;font-size:15px;border:1px solid var(--line)}
+.ico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ico svg{width:20px;height:20px}
+.kwk{font:700 15px "Noto Sans TC";color:var(--mute);margin:22px 0 8px}
+.kday{display:grid;grid-template-columns:74px minmax(0,1fr);gap:12px;background:var(--card);border-radius:22px;padding:14px;margin-bottom:12px;border:2px solid var(--line);position:relative;cursor:pointer;width:100%;text-align:left;font:inherit;color:inherit}
+.kday:focus-visible{outline:3px solid var(--sun)}
+.kdate{text-align:center;background:light-dark(#f1f5ff,#13204a);border-radius:16px;padding:8px 0;align-self:start}
+.kdate b{display:block;font:600 30px/1 Fredoka,sans-serif}
+.kdate i{font-style:normal;font-size:15px;color:var(--mute)}
+.kact{display:flex;gap:10px;align-items:flex-start;margin:4px 0 8px}
+.kact .ico{width:40px;height:40px}.kact .ico svg{width:24px;height:24px}
+.kname{font-weight:900;font-size:19px;line-height:1.25}
+.ksub{font-size:15px;color:var(--mute)}
+.krest{font-size:18px;font-weight:700;color:var(--mute);padding:10px 0}
+.stamp{position:absolute;right:12px;top:10px;border:3px solid #d1293d;color:#d1293d;border-radius:12px;padding:2px 10px;font:900 20px "Noto Sans TC";transform:rotate(12deg);opacity:0;transition:opacity .2s}
+.kday.done .stamp{opacity:.9}
+.kday.done{background:light-dark(#fff8d6,#2b2a14)}
+.kend{background:#d1293d;color:#fff;border-radius:22px;padding:16px 18px;font-size:17px;margin-top:20px}
+.kend b{font-size:22px;display:block}
+.ktip{text-align:center;color:var(--mute)}
+.kempty{background:var(--card);border-radius:22px;padding:24px;text-align:center;font-size:18px}
+.lnk{display:inline-flex;align-items:center;min-height:44px;color:inherit;font-weight:700}
+#copied{font-size:14px;color:var(--mute)}
+textarea{width:100%;min-height:160px;font:14px/1.5 inherit;margin-top:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px;display:none}
+@media(max-width:900px){.plan{grid-template-columns:minmax(0,1fr)}.side{position:static}}
+@media(max-width:600px){.cal{padding:8px}.wk{gap:4px}.day{min-height:110px;padding:5px}.st{font-size:12px;padding:3px 4px}.st i{display:none}.day .d{font-size:15px;flex-direction:column}.tag{font-size:12px}}
+@media(prefers-reduced-motion:no-preference){.st{animation:pop .25s ease-out}@keyframes pop{from{transform:scale(.85);opacity:0}}}
+</style>
+</head>
+<body>
+<header class="band adult"><div class="wrap">
+<svg class="flakes" viewBox="0 0 100 100" aria-hidden="true"><defs><g id="fl" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M0-20V20M-17-10 17 10M-17 10 17-10M-6-16 0-10 6-16M-6 16 0 10 6 16"/></g></defs><use href="#fl" x="30" y="30"/><use href="#fl" x="75" y="60" transform="scale(.9)"/><use href="#fl" x="40" y="85" transform="scale(.6)"/></svg>
+<span class="chip num">2027 / 1/21（四）– 2/3（三）</span>
+<h1>昀希的寒假營隊規劃</h1>
+<p>把四個營隊排進同一張月曆：勾選想參加的梯次，月曆會即時標出時間衝突、跨地點，並算出總費用。</p>
+<div class="alert" id="alert"></div>
+<a class="kidbtn" href="#kid">給昀希看的版本 →</a>
+</div></header>
+
+<section class="band adult"><div class="wrap">
+<h2>寒假月曆</h2>
+<p class="sub">目前是示範組合（可自由更改）。紅框＝時間重疊，橘標＝同一天要跑兩個地點。</p>
+<div class="plan">
+ <div class="cal" id="cal"></div>
+ <aside class="side">
+  <div>已選費用合計</div>
+  <div class="total num" id="total"></div>
+  <div id="totnote" class="sub" style="margin:0"></div>
+  <div id="issues"></div>
+  <div id="favs"></div>
+  <div class="row2"><button class="pri" id="copy">複製行程給家人</button><button id="reset">清空</button></div>
+  <div id="copied" aria-live="polite"></div>
+  <textarea id="fallback" readonly></textarea>
+ </aside>
+</div>
+</div></section>
+
+<section class="band adult" style="padding-top:0"><div class="wrap">
+<h2>更多冬令營：林口・新竹・竹北</h2>
+<p class="sub">11/25 網路搜尋整理，只收適合國小三年級、在 1/21–2/3 期間開課的營隊。按「加入月曆」就能和上面的行程比對衝突。</p>
+<div class="flt" id="flt">
+ <div><span>地區</span><button data-f="r:all" aria-pressed="true">全部</button><button data-f="r:hc" aria-pressed="false">新竹・竹北</button><button data-f="r:lk" aria-pressed="false">林口</button><button data-f="r:tp" aria-pressed="false">台北</button></div>
+ <div><span>梯次</span><button data-f="w:all" aria-pressed="true">全部</button><button data-f="w:a" aria-pressed="false">1/21–22</button><button data-f="w:b" aria-pressed="false">1/25–29</button><button data-f="w:c" aria-pressed="false">2/1–3</button><button data-f="w:u" aria-pressed="false">日期未公布</button></div>
+ <div><span>標記</span><button data-f="fav:0" aria-pressed="true">全部</button><button data-f="fav:1" aria-pressed="false">★ 只看有興趣</button></div>
+</div>
+<div class="cards" id="morelist"></div>
+<div class="hid" id="hidden"></div>
+</div></section>
+
+<section class="band adult" style="padding-top:0"><div class="wrap">
+<h2>挑選梯次</h2>
+<p class="sub">價格會依繳費日與午餐選擇自動更新。</p>
+<div class="settings">
+ <label>郭義繳費日 <select id="pay"><option value="1130">11/30 前</option><option value="1215">12/15 前</option><option value="1231">12/31 前</option><option value="0115">1/15 前</option><option value="late">1/15 之後</option></select></label>
+ <label><input type="checkbox" id="lunch" style="width:22px;height:22px"> 郭義代訂午餐</label>
+ <label>運動英文營 <select id="engp"><option value="e">早鳥價 4,500</option><option value="r">原價 5,200</option></select></label>
+ <label>夢飛 <select id="drp"><option value="e">早鳥 6,800（11/30 前）</option><option value="r">原價 8,800</option></select></label>
+</div>
+<div id="picker"></div>
+</div></section>
+
+<section class="band adult" style="padding-top:0"><div class="wrap">
+<h2>營隊資料</h2>
+<p class="sub">整理自海報與郭義科學報名表單。</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band adult" style="padding-top:0"><div class="wrap">
+<h2>報名前還要確認</h2>
+<ul class="todo">
+<li><b>夢飛體操冬令營</b>：唯一梯次 1/25–1/29、早鳥 6,800 到 11/30、額滿為止；海報沒寫上課地點，請用 LINE @imm8075u 詢問。</li>
+<li><b>運動英文冬令營</b>：每日上課時間未標示，月曆先以全天計；早鳥價截止日未寫，好友同行方案（4,200 元）已於 10/31 截止。</li>
+<li><b>巔峰籃球營</b>：只寫「2F 籃球場」，需確認是哪個場館；FA12 的退費說明在照片中被遮住。</li>
+<li><b>更多冬令營</b>：資料是 11/25 從各官網和報名頁整理的，名額、價格和早鳥期限都可能變動，報名前請再到官網核對。</li>
+<li><b>郭義科學</b>：須完成繳費才算加入名單；五日主題營 3 人以上團報，課程費再打 9 折；半日營上下午都報視同完整五日。</li>
+</ul>
+</div></section>
+
+
+<div id="kidv">
+ <div class="kh">
+  <a class="back" href="#plan">← 回家長版</a>
+  <div class="kt">昀希的<br><span>寒假冒險地圖</span></div>
+  <div class="cd2" id="kcount"></div>
+ </div>
+ <div class="kwrap">
+  <div class="klegend" id="klegend"></div>
+  <div id="kdays"></div>
+  <div class="kend"><b>2/4–2/10 過年囉！</b>領紅包、吃年夜飯，2/11 開學。</div>
+  <p class="ktip">每完成一天，就點那一天蓋上「完成」章！</p>
+ </div>
+</div>
+<script>
+{
+const DAYS={'0121':'1/21','0122':'1/22','0125':'1/25','0126':'1/26','0127':'1/27','0128':'1/28','0129':'1/29','0201':'2/1','0202':'2/2','0203':'2/3'};
+const WEEKS=[['0118','0119','0120','0121','0122'],['0125','0126','0127','0128','0129'],['0201','0202','0203','0204','0205']];
+const lab=k=>(+k.slice(0,2))+'/'+(+k.slice(2));
+const CAMPS={
+ kuo:{n:'郭義科學教育',c:'var(--kuo)',city:'竹北',sub:'升三年級以上 · 竹北'},
+ top:{n:'TOP 巔峰籃球營',c:'var(--top)',city:'?',sub:'5–15 歲 · 2F 籃球場'},
+ eng:{n:'運動英文冬令營',c:'var(--eng)',city:'林口',sub:'國小 3–6 年級 · 林口高中'},
+ dream:{n:'夢飛體操全日冬令營',c:'var(--dream)',city:'?',sub:'6–12 歲 · 唯一梯次 1/25–1/29'},
+ hc:{n:'更多：新竹・竹北',c:'var(--hc)',city:'新竹',sub:'網路搜尋整理'},
+ lk:{n:'更多：林口',c:'var(--lk)',city:'林口',sub:'網路搜尋整理'},
+ tp:{n:'更多：台北',c:'var(--tp)',city:'台北',sub:'網路搜尋整理'}
+};
+CAMPS.kuo.city='新竹';
+const A5=['0125','0126','0127','0128','0129'],A3=['0201','0202','0203'],A2=['0121','0122'];
+const MORE=[
+ {r:'hc',org:'自然悠遊 NatureWalker',n:'微光蟲林日誌・自然生態營',place:'竹北 蟲趣昆蟲生態館（六家五路二段182號，郭義教室隔壁）',grade:'小一～小六',when:'1/25–1/29',time:'9:00–16:00（16–17 接送）',fee:'12,000；早鳥 11,000（12/31 前）；含午餐點心保險',url:'https://www.accupass.com/event/2609070457374879718900',opts:[{id:'m-bug',short:'生態營',t:'微光蟲林日誌 1/25–1/29',days:A5,s:9,e:16,p:11000}]},
+ {r:'hc',org:'清大足球冬令營',n:'清華大學兒童足球冬令營',place:'新竹市 清華大學南大校區操場（雨天移室內）',grade:'小三～小六',when:'1/25–1/29',time:'全天 9–17／上午 9–12／下午 14–17',fee:'網頁未取得，需上官網查',url:'https://www.beclass.com/rid=31529006b0026a3cf35e',opts:[{id:'m-fb',short:'清大足球全天',t:'清大足球 全天班 1/25–1/29',days:A5,s:9,e:17,p:null},{id:'m-fbam',short:'清大足球上午',t:'清大足球 上午班',days:A5,s:9,e:12,p:null},{id:'m-fbpm',short:'清大足球下午',t:'清大足球 下午班',days:A5,s:14,e:17,p:null}]},
+ {r:'hc',org:'瀚宇教育 HuHu',n:'勇闖神秘島（STEAM）／怪奇實驗室',place:'竹北 東興國小（嘉豐十一路二段100號）',grade:'國小（怪奇實驗室：小一～小六）',when:'1/25–1/29；2/1–2/3',time:'官網未列',fee:'神秘島 8,680→早鳥 7,880；怪奇實驗室 5,880→早鳥 5,480（早鳥至 11/30）',url:'https://www.huhu.com.tw/tw/course/index.aspx',opts:[{id:'m-huhu5',short:'瀚宇神秘島',t:'勇闖神秘島 1/25–1/29',days:A5,s:9,e:17,tu:1,p:7880},{id:'m-huhu3',short:'瀚宇怪奇實驗室',t:'怪奇實驗室 2/1–2/3',days:A3,s:9,e:17,tu:1,p:5480}]},
+ {r:'hc',org:'築苗教育',n:'小小獸醫師／科學偵探社',place:'竹北 東興國小',grade:'獸醫師 小一～小六；偵探社 小三～小六',when:'1/25–1/29；2/1–2/3',time:'9:00–17:00（8–18 彈性接送），師生比 1:6',fee:'官網未列',url:'https://newdream.tw/zhubei-winter-camp/',opts:[{id:'m-vet',short:'小小獸醫師',t:'小小獸醫師 1/25–1/29',days:A5,s:9,e:17,p:null},{id:'m-det',short:'科學偵探社',t:'科學偵探社 2/1–2/3',days:A3,s:9,e:17,p:null}]},
+ {r:'hc',org:'億學（ESOL）',n:'科學運動冬令營',place:'竹北 博愛／竹仁國小',grade:'大班～小六',when:'2/1–2/3',time:'9:00–17:00（免費接送 8–18）',fee:'3,000 元起',url:'https://esol-edu.com/collections/%E6%A1%83%E5%9C%92%E6%96%B0%E7%AB%B9/products/%E7%A7%91%E5%AD%B8%E9%81%8B%E5%8B%95%E5%86%AC%E4%BB%A4%E7%87%9F-%E6%96%B0%E7%AB%B9%E7%AB%B9%E5%8C%97%E6%A0%A1%E5%8D%80',opts:[{id:'m-esolz',short:'科學運動營',t:'科學運動營（竹北）2/1–2/3',days:A3,s:9,e:17,p:3000,from:1}]},
+ {r:'hc',org:'橙智教育',n:'兒童心智力營',place:'竹北 文興路一段26號',grade:'兒童（請向主辦確認年級）',when:'2/1–2/3',time:'9:00–17:00',fee:'原價 11,800（超早鳥 9,700）',url:'https://www.smartorange.com.tw/winter-camp/2027_children-education/',opts:[{id:'m-mind',short:'心智力營',t:'兒童心智力營 2/1–2/3',days:A3,s:9,e:17,p:11800}]},
+ {r:'hc',org:'橙智教育',n:'橘子泥歌舞劇營（第二梯）',place:'竹北 文興路一段26號',grade:'小三～國二',when:'1/25–1/29',time:'9:00–18:00',fee:'原價 23,800；不退費價 19,800（超早鳥 10/31 已過）',url:'https://www.smartorange.com.tw/shop/2027wintercampmusicalhc/',opts:[{id:'m-musical',short:'歌舞劇營',t:'橘子泥歌舞劇營 1/25–1/29',days:A5,s:9,e:18,p:23800}]},
+ {r:'hc',org:'數感實驗室（美數學院）',n:'數學冬令營（十興國小場）',place:'竹北 十興國小',grade:'小二～小六',when:'1/21–1/22；1/25–1/29',time:'未公布',fee:'未公布',url:'https://freehire.me/jobs/2027han-jia-xin-zhu-dong-ling-ying-zhu-li-dao-shi-guo-ji-shu-gan-jiao-yu-gu-fen-you-xian-gong-si-5qn4m4zf',note:'這筆是從營隊的徵才資訊看到的，報名細節要到官網查',opts:[{id:'m-sg1',short:'數感 M1',t:'數感 M1 1/21–1/22',days:A2,s:9,e:17,tu:1,p:null},{id:'m-sg2',short:'數感 M2',t:'數感 M2 1/25–1/29',days:A5,s:9,e:17,tu:1,p:null}]},
+ {r:'hc',org:'皇家野馬足球俱樂部',n:'足球 × 藝術 × 匹克球寒令營',place:'竹北 竹仁國小（仁和街1號）',grade:'大班～小六',when:'日期待確認',time:'待確認',fee:'早鳥至 11/30；3 人團報 95 折',url:'https://www.beclass.com/rid=31528f86af568d0a8e91',opts:[]},
+ {r:'hc',org:'自強基金會',n:'ESI 小學天才冬令營／麥塊天工開物（五天下午）',place:'新竹',grade:'國小',when:'1/25 起',time:'待確認',fee:'待確認',url:'https://edu.tcfst.org.tw/web/tw/class/index.asp?stype=C04',opts:[]},
+ {r:'lk',org:'林口國民運動中心',n:'金牌小健將全日營＋單項營',place:'林口國民運動中心',grade:'依簡章',when:'見簡章',time:'見簡章',fee:'11/30 前 9 折、12/31 前 95 折；電話 02-2602-9092',url:'https://n.yam.com/Article/20261031175287',opts:[]},
+ {r:'lk',org:'億學（ESOL）',n:'科學運動冬令營（林口）',place:'林口 佳林路200號（近林口國高中／三井）',grade:'大班～小六',when:'1/21–1/22（2 日）；1/25–1/29（5 日）；2/1–2/3（3 日）',time:'9:00–17:00；免費接送 8:00–18:00；延長到 18:30 每日 200',fee:'課程費＋教材費（含午餐）：2 日 3,000＋1,000；5 日 6,800＋2,200（飛行特攻隊 2,500）；3 日 4,300＋1,500<br>組合課程費：2＋5 日 7,800、5＋3 日 8,800、全 10 日 10,800（備註註明主題）',url:'https://esoledu.easy.co/products/%E7%A7%91%E5%AD%B8%E9%81%8B%E5%8B%95%E5%86%AC%E4%BB%A4%E7%87%9F-%E6%96%B0%E5%8C%97%E6%9E%97%E5%8F%A3%E6%A0%A1%E5%8D%80',note:'網頁價格顯示多了兩位數（如 300,000.00），以頁首 3,000 元為準；未列早鳥。聯絡：LINE @esol.edu、02-2912-1688',opts:[{id:'m-el2',short:'億學科學運動',t:'億學 兩日營 1/21–1/22',days:A2,s:9,e:17,ch:['消失的電光之城','創客Power！夢想發明家'],pf:()=>4000},{id:'m-el5',short:'億學科學運動',t:'億學 五日營 1/25–1/29',days:A5,s:9,e:17,ch:['科學魔術的奇幻世界','突破力量的牛頓狂想曲','飛行特攻隊－進階動力營'],pf:()=>6800+((S.ch['m-el5']|0)===2?2500:2200)},{id:'m-el3',short:'億學科學運動',t:'億學 三日營 2/1–2/3',days:A3,s:9,e:17,ch:['前進！奇幻水域探險號！','宇宙文明探索王'],pf:()=>5800}]},
+ {r:'lk',org:'橘子蘋果',n:'麥塊程式創客營（初階）／Roblox 遊戲設計營',place:'林口 文化二路一段390號2F',grade:'請向主辦確認',when:'1/25–1/28',time:'未列',fee:'未列',url:'https://orangeapple.co/camps/stemkids',opts:[{id:'m-oa',short:'橘子蘋果程式',t:'麥塊／Roblox 1/25–1/28',days:['0125','0126','0127','0128'],s:9,e:17,tu:1,p:null}]},
+ {r:'lk',org:'英國文化協會',n:'國小英語冬令營（6–12 歲）',place:'林口文化教學中心',grade:'6–12 歲',when:'一週課程，日期見官網',time:'見官網',fee:'見官網',url:'https://www.britishcouncil.org.tw/english/young-learners/primary/winter-holiday-course',opts:[]},
+ {r:'lk',org:'WINWIN 打包勝利',n:'打包勝利冬令營（林口）',place:'林口 新林國小（三民路101號）',grade:'7–10 歲（動力實驗室 8–12 歲），混齡分組',when:'1/21–1/22（2 日）；1/25–1/29（5 日）；2/1–2/3（3 日）',time:'9:00–17:00；8:00 起報到，17–19 點免費延托',fee:'11/20 前優惠價：2 日 3,400、3 日 4,500、5 日 7,100（5 人團報更低）。11/20 已過，11/30 前晚鳥價網頁沒寫金額，報名時請看實際價格',url:'https://play.niceday.tw/zh-tw/regions/21/products/3732453516533',note:'上午是主題任務，下午三項運動或科學競賽。來自 Niceday 營隊列表',
+  opts:[{id:'m-wwl2',short:'打包勝利',t:'打包勝利 2 日營 1/21–1/22',days:A2,s:9,e:17,ch:['玩具大冒險'],p:3400},
+        {id:'m-wwl5',short:'打包勝利',t:'打包勝利 5 日營 1/25–1/29',days:A5,s:9,e:17,ch:['玩具大冒險','CSI 科學小偵探','怪獸電力科學','動力實驗室（8–12 歲）'],p:7100},
+        {id:'m-wwl3',short:'打包勝利',t:'打包勝利 3 日營 2/1–2/3',days:A3,s:9,e:17,ch:['怪獸電力科學','玩具大冒險'],p:4500}]},
+ {r:'hc',org:'WINWIN 打包勝利',n:'打包勝利冬令營（竹北）',place:'竹北 東興國小（嘉豐十一路二段100號）／成功國中',grade:'7–10 歲（動力實驗室 8–12、AI＋3D 列印 9–12 歲）',when:'1/21–1/22（2 日）；1/25–1/29（5 日）；2/1–2/3（3 日）',time:'9:00–17:00；8:00 起報到，17–19 點免費緩衝',fee:'11/20 前優惠價：2 日 3,400、3 日 4,500、5 日 7,100。11/20 已過，現在價格請看報名頁',url:'https://play.niceday.tw/zh-tw/regions/21/products/3732837068145',note:'同一主題在東興國小和成功國中都有開，報名時注意選對校區。來自 Niceday 營隊列表',
+  opts:[{id:'m-wwz2',short:'打包勝利',t:'打包勝利 2 日營 1/21–1/22',days:A2,s:9,e:17,ch:['怪獸電力科學','CSI 科學小偵探','玩具大冒險','AI＋3D 列印小職人（9–12 歲）'],p:3400},
+        {id:'m-wwz5',short:'打包勝利',t:'打包勝利 5 日營 1/25–1/29',days:A5,s:9,e:17,ch:['怪獸電力科學','玩具大冒險','CSI 科學小偵探','動力實驗室（8–12 歲）'],p:7100},
+        {id:'m-wwz3',short:'打包勝利',t:'打包勝利 3 日營 2/1–2/3',days:A3,s:9,e:17,ch:['怪獸電力科學','CSI 科學小偵探'],p:4500}]},
+ {r:'hc',org:'WINWIN 打包勝利',n:'打包勝利冬令營（新竹東區）',place:'新竹市 清華大學南大校區（南大路521號）',grade:'7–10 歲',when:'1/25–1/29',time:'9:00–17:00；8:00 起報到，17–19 點免費延托',fee:'11/20 前優惠價 7,100（5 人團報 6,600）；11/20 已過，現在價格請看報名頁；含餐',url:'https://play.niceday.tw/zh-tw/regions/21/products/3732885195073',note:'毛茸茸生物：上午認識龍貓、蜜袋鼯、刺蝟，下午做手作。來自 Niceday 營隊列表',
+  opts:[{id:'m-wwh5',short:'打包勝利',t:'打包勝利 5 日營 1/25–1/29',days:A5,s:9,e:17,ch:['毛茸茸生物','CSI 科學小偵探'],p:7100}]},
+ {r:'hc',org:'武甲總合武術運動館',n:'小小勇者兒童防身武術冬令營',place:'新竹市東區 中央路245巷68號（武甲新竹館）',grade:'6–12 歲',when:'1/25–1/29',time:'8:30–16:30（最晚 17:30 接回，無延托）',fee:'早鳥 10,100（11/30 前）；舊生或 3 人團報 9,700',url:'https://play.niceday.tw/zh-tw/regions/21/products/3698863671885',note:'巴西柔術、兒童拳擊、泰拳與肌力體能。來自 Niceday 營隊列表',
+  opts:[{id:'m-wj',short:'武術營',t:'兒童防身武術營 1/25–1/29',days:A5,s:8.5,e:16.5,p:10100}]},
+ {r:'hc',org:'峯云營隊',n:'新竹小叮噹自然科學冬令營（三天兩夜）',place:'新竹縣新豐鄉 小叮噹科學主題樂園',grade:'升小二～國二',when:'日期見報名頁',time:'過夜營',fee:'見報名頁',url:'https://play.niceday.tw/zh-tw/regions/21/products/3696919780102',note:'要在營地過夜，有玩雪、烤肉、團康。來自 Niceday 營隊列表',opts:[]},
+ {r:'tp',org:'武甲總合武術運動館',n:'小小勇者兒童防身武術冬令營（大直館）',place:'台北市內湖區 內湖路一段49號B1（武甲大直館）',grade:'6–12 歲，混齡分 3 組，每組有隊輔',when:'1/25–1/29',time:'8:30–16:30（8:00 報到，最晚 17:30 接回，無延托）',fee:'早鳥 10,100（11/30 前）；舊生或 3 人以上同行 9,700。含午餐、點心、營隊 T 恤',url:'https://play.niceday.tw/zh-tw/regions/21/products/3264734571267',note:'巴西柔術、踢拳擊、肌力體能、俄式體操、菲律賓魔杖。和新竹館同一套課程，地點在台北',
+  opts:[{id:'m-wjt',short:'武術營（大直）',t:'兒童防身武術營・大直館 1/25–1/29',days:A5,s:8.5,e:16.5,p:10100}]}
+];
+const W5=['0125','0126','0127','0128','0129'];
+const D5={'1130':.7,'1215':.8,'1231':.9,'0115':.95,late:1}, D1={'1130':.9,'1215':.95,'1231':.95,'0115':1,late:1};
+const S={pay:'1130',lunch:true,eng:'e',dr:'e',sel:{},ch:{},fav:{},hide:{}};
+const kuoDay=(k,a,b)=>({id:'kd'+k,camp:'kuo',short:'郭義一日',t:'一日數理大玩家 '+lab(k),days:[k],s:9,e:16,ch:['A 組：'+a,'B 組：'+b],price:()=>Math.round(1600*D1[S.pay])+400+(S.lunch?120:0)});
+const OPTS=[
+ {id:'kw',camp:'kuo',short:'郭義主題營',t:'五日主題營 1/25–1/29',days:W5,s:9,e:16,ch:['生物密集課程營二部曲（郭義老師）','能量嘉年華','科學大玩家','數學大玩家（安德教育）','數理大玩家：上午科學＋下午數學','數理大玩家：上午數學＋下午科學'],price:()=>Math.round(8000*D5[S.pay])+2000+(S.lunch?600:0)},
+ {id:'kam',camp:'kuo',short:'郭義半日上午',t:'一週半日營・上午 1/25–1/29',days:W5,s:9,e:12,ch:['科學大玩家 A','數學大玩家（楊主任）'],price:()=>5000},
+ {id:'kpm',camp:'kuo',short:'郭義半日下午',t:'一週半日營・下午 1/25–1/29',days:W5,s:13,e:16,ch:['科學大玩家 B','數學大玩家（楊主任）'],price:()=>5000},
+ kuoDay('0121','數學魔術＋神奇電力大冒險','神奇電力大冒險＋幾何積木'),
+ kuoDay('0122','密碼學＋化學魔力無法擋','化學魔力無法擋＋數學藝術'),
+ kuoDay('0201','數學地圖＋微觀世界的探索','微觀世界的探索＋機率遊樂場'),
+ kuoDay('0202','古文明數字＋動力科學大玩家','動力科學大玩家＋邏輯推理'),
+ kuoDay('0203','密室逃脫＋極速轉動的秘密','極速轉動的秘密＋河內塔'),
+ {id:'fa11',camp:'top',short:'籃球 FA11',t:'FA11 綜合班 1/21–1/22',days:['0121','0122'],s:15,e:17.83,price:()=>2000},
+ {id:'fa12',camp:'top',short:'籃球 FA12',t:'FA12 綜合班 1/25–1/29',days:W5,s:15,e:17.83,price:()=>5500},
+ {id:'fa13',camp:'top',short:'籃球 FA13',t:'FA13 綜合班 2/1–2/3',days:['0201','0202','0203'],s:15,e:17.83,price:()=>3000},
+ {id:'eng',camp:'eng',short:'運動英文',t:'運動英文冬令營 2/1–2/3',days:['0201','0202','0203'],s:9,e:17,tu:1,price:()=>S.eng==='e'?4500:5200},
+ {id:'dream',camp:'dream',short:'夢飛體操',t:'夢飛體操全日冬令營 1/25–1/29',days:W5,s:9.5,e:17.5,price:()=>S.dr==='r'?8800:6800}
+];
+MORE.forEach((m,i)=>{m.k='m'+i;for(const o of m.opts){o.camp=m.r;o.org=m.org;o.k=m.k;o.price=o.pf||(()=>o.p);OPTS.push(o)}});
+const KEY=o=>o.k||o.camp;
+const NAME=k=>{const m=MORE.find(x=>x.k===k);return m?m.org+'・'+m.n:CAMPS[k].n};
+const fmt=n=>'NT$'+n.toLocaleString('en-US');
+const hm=h=>{const m=Math.round((h%1)*60);return Math.floor(h)+':'+String(m).padStart(2,'0')};
+const time=o=>o.tu?'時間未標示':hm(o.s)+'–'+hm(o.e);
+
+/* defaults: sample plan */
+const DEF={sel:{fa11:1,kw:1,eng:1},ch:{}};
+let loaded=false;
+try{const v=JSON.parse(localStorage.getItem('yx-camp')||'null');if(v){Object.assign(S,v);loaded=true}}catch(e){}
+if(!loaded)Object.assign(S.sel,DEF.sel);
+const save=()=>{try{localStorage.setItem('yx-camp',JSON.stringify(S))}catch(e){}};
+
+/* default pay window from today */
+const today=new Date();
+const dl=[['1130',new Date(2026,10,30,23,59)],['1215',new Date(2026,11,15,23,59)],['1231',new Date(2026,11,31,23,59)],['0115',new Date(2027,0,15,23,59)]];
+if(!S.touched){const f=dl.find(d=>today<=d[1]);S.pay=f?f[0]:'late'}
+
+function combo(){const a=S.sel['m-el2']&&!S.hide.m11,b=S.sel['m-el5']&&!S.hide.m11,c=S.sel['m-el3']&&!S.hide.m11;
+ if(a&&b&&c)return{d:3300,l:'億學十日組合'};if(b&&c)return{d:2300,l:'億學八日組合'};if(a&&b)return{d:2000,l:'億學七日組合'};return{d:0}}
+const chosen=()=>OPTS.filter(o=>S.sel[o.id]&&!S.hide[KEY(o)]);
+function analyse(){
+ const per={},issues=[];
+ for(const o of chosen())for(const d of o.days)(per[d]=per[d]||[]).push(o);
+ const bad={},warn={};
+ for(const d in per){
+  const L=per[d];
+  for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){
+   const a=L[i],b=L[j];
+   if(a.s<b.e&&b.s<a.e){bad[d]=1;const key=a.id+b.id;if(!issues.some(x=>x.k===key))issues.push({k:key,t:a.short+' 與 '+b.short+' 時間重疊（'+a.days.filter(x=>b.days.includes(x)).map(lab).join('、')+'）'})}
+   const ca=CAMPS[a.camp].city,cb=CAMPS[b.camp].city;
+   if(ca!=='?'&&cb!=='?'&&ca!==cb){warn[d]=1;const key='c'+a.id+b.id;if(!issues.some(x=>x.k===key))issues.push({k:key,t:a.short+'（'+ca+'）與 '+b.short+'（'+cb+'）同一天要跑兩個城市'})}
+  }
+ }
+ if(S.sel.kam&&S.sel.kpm)issues.push({k:'half',w:1,t:'郭義上下午半日營都報＝視同完整五日主題營，請改選主題營'});
+ return {per,bad,warn,issues};
+}
+function render(){
+ const A=analyse();
+ document.getElementById('cal').innerHTML='<div class="wk">'+['一','二','三','四','五'].map(x=>'<div class="dow">'+x+'</div>').join('')+'</div>'+
+ WEEKS.map(w=>'<div class="wk">'+w.map(d=>{
+  if(!DAYS[d])return '<div class="day off"><div class="d"><span class="num">'+lab(d)+'</span></div><div class="empty">不在區間</div></div>';
+  const L=(A.per[d]||[]).slice().sort((a,b)=>a.s-b.s);
+  return '<div class="day'+(A.bad[d]?' bad':'')+'"><div class="d"><span class="num">'+lab(d)+'</span>'+(A.bad[d]?'<span class="tag">衝突</span>':A.warn[d]?'<span class="tag warn">跨地</span>':'')+'</div>'+
+   (L.length?L.map(o=>'<span class="st" style="background:'+CAMPS[o.camp].c+'">'+o.short+'<i class="num">'+time(o)+'</i></span>').join(''):'<div class="empty">空檔</div>')+'</div>'}).join('')+'</div>').join('');
+ let tot=0,unk=0;for(const o of chosen()){const p=o.price();if(p==null)unk++;else tot+=p}
+ const cb=combo();tot-=cb.d;
+ document.getElementById('total').textContent=fmt(tot);
+ const free=Object.keys(DAYS).filter(d=>!A.per[d]).map(lab);
+ document.getElementById('totnote').textContent=chosen().length+' 個梯次'+(cb.d?'・'+cb.l+' 已折 '+fmt(cb.d):'')+(unk?'・'+unk+' 個梯次費用未公布，未計入':'')+(free.length?'・空檔：'+free.join('、'):'・10 天全排滿');
+ document.getElementById('issues').innerHTML=A.issues.length?'<ul>'+A.issues.map(x=>'<li class="badtxt">'+x.t+'</li>').join('')+'</ul>':(chosen().length?'<p class="ok">沒有時間衝突</p>':'');
+ for(const o of OPTS){const el=document.getElementById('p-'+o.id);if(!el)continue;const p=o.price();el.textContent=p==null?'未標示':fmt(p)+(o.from?' 起':'')}
+ more();cards();
+ const fv=Object.keys(S.fav).filter(k=>S.fav[k]&&!S.hide[k]);
+ document.getElementById('favs').innerHTML=fv.length?'<div class="fl">有興趣（'+fv.length+'）</div><ul>'+fv.map(k=>'<li>'+NAME(k)+'</li>').join('')+'</ul>':'';
+}
+const F={r:'all',w:'all',fav:0};
+const acts=k=>'<div class="acts"><button data-fav="'+k+'" aria-pressed="'+!!S.fav[k]+'" class="fv">'+(S.fav[k]?'★ 有興趣':'☆ 有興趣')+'</button><button data-hide="'+k+'" class="dl">刪除</button></div>';
+const WK={a:A2,b:A5,c:A3};
+function clash(o){return chosen().filter(x=>x.id!==o.id&&x.days.some(d=>o.days.includes(d))&&x.s<o.e&&o.s<x.e)}
+function more(){
+ const L=MORE.filter(m=>!S.hide[m.k]&&(!F.fav||S.fav[m.k])&&(F.r==='all'||m.r===F.r)&&(F.w==='all'||(F.w==='u'?!m.opts.length:m.opts.some(o=>o.days.some(d=>WK[F.w].includes(d))))));
+ document.getElementById('morelist').innerHTML=L.length?L.map(m=>{
+  const ids=m.opts.map(o=>o.id),on=ids.some(i=>S.sel[i]);
+  const c=m.opts.length===1&&!on?clash(m.opts[0]):[];
+  return '<div class="mc'+(S.fav[m.k]?' fav':'')+'" style="border-left-color:'+CAMPS[m.r].c+'">'+acts(m.k)+'<div class="mh"><span class="rg" style="background:'+CAMPS[m.r].c+'">'+({lk:'林口',hc:'新竹・竹北',tp:'台北內湖'}[m.r])+'</span><span class="mo">'+m.org+'</span></div><h3>'+m.n+'</h3><dl>'+
+  [['日期',m.when],['時間',m.time],['年級',m.grade],['地點',m.place],['費用',m.fee]].map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('')+'</dl>'+
+  (m.note?'<p class="nt">'+m.note+'</p>':'')+
+  (m.opts.length>1?'<div class="pk"><div class="fl">選梯次（可複選）</div>'+m.opts.map(o=>{const sel=!!S.sel[o.id],cc=sel?[]:clash(o);return '<div class="pr"><button data-add="'+o.id+'" aria-pressed="'+sel+'" class="'+(sel?'pri':'')+'">'+(sel?'✓ ':'＋ ')+o.t+(o.pf||o.p?'<span class="num"> · '+fmt(o.price())+'</span>':'')+'</button>'+
+   (o.ch&&sel?'<select data-ch="'+o.id+'" aria-label="選擇主題">'+o.ch.map((x,i)=>'<option value="'+i+'"'+((S.ch[o.id]|0)===i?' selected':'')+'>'+x+'</option>').join('')+'</select>':'')+
+   (cc.length?'<p class="badtxt nt">和 '+cc.map(x=>x.short).join('、')+' 時間重疊</p>':'')+'</div>'}).join('')+'</div>':'')+
+  '<div class="row2">'+(m.opts.length===1?'<button data-add="'+ids.join(',')+'" class="'+(on?'':'pri')+'">'+(on?'✓ 已在月曆（再按移除）':'加入月曆')+'</button>':m.opts.length?'':'<span class="nt">日期未公布，暫不能排進月曆</span>')+
+  '<a class="lnk" href="'+m.url+'">官網／報名頁</a></div>'+(c.length?'<p class="badtxt nt">和已選的 '+c.map(x=>x.short).join('、')+' 時間重疊</p>':'')+'</div>'}).join(''):'<p class="sub">'+(F.fav?'還沒有標記「有興趣」的營隊，按卡片上的 ☆ 就能加入。':'這個條件下沒有營隊。')+'</p>';
+ const H=Object.keys(S.hide).filter(k=>S.hide[k]);
+ document.getElementById('hidden').innerHTML=H.length?'<b>已刪除 '+H.length+' 個：</b>'+H.map(k=>'<button data-restore="'+k+'">還原 '+NAME(k)+'</button>').join(''):'';
+}
+function picker(){
+ document.getElementById('picker').innerHTML=Object.keys(CAMPS).filter(c=>OPTS.some(o=>o.camp===c&&!S.hide[KEY(o)])).map(c=>'<div class="grp"><h3 style="background:'+CAMPS[c].c+'">'+CAMPS[c].n+'<small>'+CAMPS[c].sub+'</small></h3>'+
+  OPTS.filter(o=>o.camp===c&&!S.hide[KEY(o)]).map(o=>'<label class="opt'+(S.fav[KEY(o)]?' fav':'')+'" for="o-'+o.id+'"><input type="checkbox" id="o-'+o.id+'" data-id="'+o.id+'"'+(S.sel[o.id]?' checked':'')+'><span><span class="t">'+(S.fav[KEY(o)]?'★ ':'')+o.t+'</span><br><span class="m num">'+time(o)+'</span>'+
+  (o.ch?'<br><select data-ch="'+o.id+'" aria-label="選擇課程">'+o.ch.map((x,i)=>'<option value="'+i+'"'+((S.ch[o.id]|0)===i?' selected':'')+'>'+x+'</option>').join('')+'</select>':'')+
+  '</span><span class="p num" id="p-'+o.id+'"></span></label>').join('')+'</div>').join('');
+}
+function cards(){
+ const C=[
+  ['kuo','郭義科學教育 2027 冬令營',[['地點','竹北教室：六家五路二段 178 號<br>東興教室：嘉豐七街 145 號 2F'],['對象','升三年級以上'],['五日營','1/25–1/29 9:00–16:00<br>課程 8,000＋材料 2,000＋午餐 600（可自備）'],['早鳥','五日營課程費：11/30 前 7 折、12/15 前 8 折、12/31 前 9 折、1/15 前 95 折<br>一日營課程費：11/30 前 9 折、12/31 前 95 折'],['一日營','1/21、1/22、2/1、2/2、2/3，每日 2,120（含午餐 120）'],['半日營','一週半日 5,000；單次半日 1,000'],['聯絡','郭老師 0928-689-803 · Line：hymanliu'],['報名','<a href="https://forms.gle/ZdwaPgVxnibuFH8eA">Google 報名表單</a>']]],
+  ['top','TOP 巔峰籃球營・綜合班',[['對象','5–15 歲，零基礎可'],['地點','2F 籃球場'],['時間','15:00–17:50'],['梯次','FA11 1/21–1/22 · 2,000<br>FA12 1/25–1/29 · 5,500<br>FA13 2/1–2/3 · 3,000'],['內容','依年齡分組：動作矯正、投籃、傳球、上籃']]],
+  ['eng','運動英文冬令營',[['日期','2/1（一）– 2/3（三）'],['地點','林口高中'],['對象','國小 3–6 年級'],['費用','原價 5,200 · 早鳥 4,500<br>好友同行 4,200（10/31 已截止）'],['特色','遊戲化課程、師生比 1:10、專業教練、外籍師資']]],
+  ['dream','2027 夢飛體操全日冬令營',[['日期','1/25（一）– 1/29（五），唯一梯次，額滿為止'],['時間','9:30–17:30（最早 8:00 可到）'],['年齡','6–12 歲'],['費用','原價 8,800 · 早鳥 6,800（至 11/30）'],['報名','LINE：@imm8075u'],['內容','翻滾、跳箱、攀岩、小跳床、側翻、跑酷、彈翻床、前空翻，週五驗收'],['供應','午餐、午休、點心時間'],['未標示','上課地點']]]
+ ];
+ const TT=[['9:30',['翻滾體操','跳箱基礎','跳箱遊戲','翻滾體操','跳箱驗收']],['10:30',['攀岩遊戲','小跳床基礎','攀岩挑戰','小跳床進階','攀岩驗收']],['11:30','午餐'],['12:30','午休'],['13:30',['側翻基礎','跑酷基礎','手翻基礎','跑酷路線','側翻驗收']],['14:30',['彈翻床基礎','跑酷遊戲','彈翻床進階','跑酷驗收','彈翻床驗收']],['15:30','點心'],['16:30',['長跳床基礎','前空翻體驗','長跳床遊戲','前空翻基礎','小跳床驗收']],['17:30','回家']];
+ document.getElementById('cards').innerHTML=C.filter(([c])=>!S.hide[c]&&(!F.fav||S.fav[c])).map(([c,h,rows])=>'<div class="cd'+(S.fav[c]?' fav':'')+'" style="border-top-color:'+CAMPS[c].c+'">'+acts(c)+'<h3>'+h+'</h3><dl>'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('')+'</dl>'+
+  (c==='dream'?'<div class="scroll"><table class="tt"><thead><tr><th></th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th></tr></thead><tbody>'+TT.map(([t,v])=>'<tr><th class="num">'+t+'</th>'+(Array.isArray(v)?v.map(x=>'<td>'+x+'</td>').join(''):'<td class="span" colspan="5">'+v+'</td>')+'</tr>').join('')+'</tbody></table></div>':'')+'</div>').join('');
+}
+function alertBox(){
+ const f=dl.find(d=>today<=d[1]);const el=document.getElementById('alert');
+ if(!f){el.textContent='郭義早鳥優惠已全部截止。';return}
+ const days=Math.floor((f[1]-today)/864e5);
+ const map={'1130':'五日營課程費 7 折（10,600 → 8,200）；夢飛體操營早鳥 6,800 也同日截止','1215':'五日營課程費 8 折','1231':'五日營課程費 9 折','0115':'五日營課程費 95 折'};
+ el.innerHTML='<b class="num">'+(days>0?'還剩 '+days+' 天':'今天截止')+'</b><span>郭義科學早鳥 '+lab(f[0])+' 前繳費：'+map[f[0]]+'，完成繳費才算報名。</span>';
+}
+function summary(){
+ const A=analyse();let tot=0;
+ const lines=['昀希 2027 寒假營隊（1/21–2/3）'];
+ for(const o of chosen().sort((a,b)=>a.days[0].localeCompare(b.days[0]))){const p=o.price();if(p!=null)tot+=p;
+  lines.push('・'+(o.org||CAMPS[o.camp].n)+'｜'+o.t+(o.ch?'｜'+o.ch[S.ch[o.id]|0]:'')+'｜'+time(o)+'｜'+(p==null?'費用未標示':fmt(p)))}
+ const cb=combo();tot-=cb.d;if(cb.d)lines.push(cb.l+'：課程費折 '+fmt(cb.d));
+ lines.push('合計：'+fmt(tot));
+ const fv=Object.keys(S.fav).filter(k=>S.fav[k]&&!S.hide[k]);if(fv.length)lines.push('有興趣：'+fv.map(NAME).join('、'));
+ if(A.issues.length)lines.push('注意：'+A.issues.map(x=>x.t).join('；'));
+ return lines.join('\n');
+}
+document.getElementById('pay').value=S.pay;document.getElementById('lunch').checked=S.lunch;document.getElementById('engp').value=S.eng;document.getElementById('drp').value=S.dr||'e';
+picker();alertBox();render();
+const touch=()=>{S.touched=1;save();render()};
+document.getElementById('picker').addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.id){S.sel[t.dataset.id]=t.checked?1:0;if(!t.checked)delete S.sel[t.dataset.id]}
+ if(t.dataset.ch)S.ch[t.dataset.ch]=+t.value;touch()});
+document.getElementById('pay').addEventListener('change',e=>{S.pay=e.target.value;touch()});
+document.getElementById('lunch').addEventListener('change',e=>{S.lunch=e.target.checked;touch()});
+document.getElementById('engp').addEventListener('change',e=>{S.eng=e.target.value;touch()});
+document.getElementById('drp').addEventListener('change',e=>{S.dr=e.target.value;touch()});
+document.getElementById('morelist').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(!b)return;const ids=b.dataset.add.split(',');
+ if(ids.some(i=>S.sel[i]))ids.forEach(i=>delete S.sel[i]);else S.sel[ids[0]]=1;touch();picker();render()});
+document.getElementById('flt').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;const [k,v]=b.dataset.f.split(':');F[k]=k==='fav'?+v:v;
+ for(const x of document.querySelectorAll('[data-f^="'+k+':"]'))x.setAttribute('aria-pressed',x===b);more();cards()});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-fav],[data-hide],[data-restore]');if(!t)return;
+ if(t.dataset.fav){const k=t.dataset.fav;S.fav[k]=S.fav[k]?0:1}
+ if(t.dataset.hide){const k=t.dataset.hide;S.hide[k]=1;S.fav[k]=0;for(const o of OPTS)if(KEY(o)===k)delete S.sel[o.id]}
+ if(t.dataset.restore)S.hide[t.dataset.restore]=0;
+ touch();picker();render()});
+document.getElementById('morelist').addEventListener('change',e=>{const t=e.target;if(t.dataset.ch){S.ch[t.dataset.ch]=+t.value;touch();picker();render()}});
+
+const IC={
+ ball:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.6 5.6c3 3 3 9.8 0 12.8M18.4 5.6c-3 3-3 9.8 0 12.8"/></svg>',
+ flask:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M7.5 15h9"/></svg>',
+ jump:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4.5" r="2"/><path d="M4 8l8 2 8-2M12 10v5l-4 6M12 15l4 6"/></svg>',
+ leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l8-8"/></svg>',
+ abc:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 18l4-12 4 12M5.5 14h5M15 6v12h3a3 3 0 0 0 0-6h-3 2.5a3 3 0 0 0 0-6z"/></svg>',
+ star:'<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg>',
+ paw:'<svg viewBox="0 0 24 24" fill="#fff"><ellipse cx="7" cy="9" rx="2" ry="2.6"/><ellipse cx="17" cy="9" rx="2" ry="2.6"/><ellipse cx="10" cy="5" rx="1.8" ry="2.4"/><ellipse cx="14" cy="5" rx="1.8" ry="2.4"/><path d="M12 11c-3 0-6 4-6 6.5 0 2 2 2.5 3.5 2l2.5-.8 2.5.8c1.5.5 3.5 0 3.5-2C18 15 15 11 12 11z"/></svg>'
+};
+const KC={ball:'#e8662a',flask:'#0f8b8d',jump:'#d63d78',leaf:'#3f8f2a',abc:'#5b7d00',star:'#7048c8',paw:'#b7791f'};
+function kidInfo(o){const id=o.id,t=o.ch?o.ch[S.ch[id]|0].replace(/^[AB] 組：/,''):'';
+ if(id==='kw')return{c:'flask',n:'科學實驗營',d:t};
+ if(id==='kam'||id==='kpm')return{c:'flask',n:'半天科學數學營',d:t};
+ if(id.startsWith('kd'))return{c:'flask',n:'數理大玩家',d:t};
+ if(o.camp==='top')return{c:'ball',n:'籃球營',d:'投籃、運球、上籃'};
+ if(id==='eng')return{c:'abc',n:'運動英文營',d:'一邊運動一邊說英文'};
+ if(id==='dream')return{c:'jump',n:'夢飛體操營',d:''};
+ if(id==='m-bug')return{c:'leaf',n:'昆蟲探險營',d:'找昆蟲、做自然收藏'};
+ if(id.startsWith('m-fb'))return{c:'ball',n:'清大足球營',d:'在大學操場踢足球'};
+ if(id==='m-huhu5')return{c:'flask',n:'神秘島科學營',d:''};
+ if(id==='m-huhu3')return{c:'flask',n:'怪奇實驗室',d:''};
+ if(id==='m-vet')return{c:'paw',n:'小小獸醫師',d:'認識動物、學照顧牠們'};
+ if(id==='m-det')return{c:'flask',n:'科學偵探社',d:'找線索、做實驗破案'};
+ if(id.startsWith('m-el')||id==='m-esolz')return{c:'flask',n:'科學運動營',d:t||'做科學、再去運動'};
+ if(id==='m-mind')return{c:'star',n:'心智力營',d:''};
+ if(id==='m-musical')return{c:'star',n:'歌舞劇營',d:'唱歌、跳舞、上台演戲'};
+ if(id.startsWith('m-sg'))return{c:'star',n:'數學營',d:''};
+ if(id==='m-oa')return{c:'star',n:'程式創客營',d:'麥塊、Roblox'};
+ if(id.startsWith('m-ww')){const th=t.replace(/（.*）/,'');return{c:/毛茸茸/.test(th)?'paw':/玩具|AI/.test(th)?'star':'flask',n:th+'營',d:''}}
+ if(id==='m-wj'||id==='m-wjt')return{c:'jump',n:'兒童武術營',d:'拳擊、巴西柔術、練體能'};
+ return{c:'star',n:o.short,d:''}}
+const DTT={'0125':0,'0126':1,'0127':2,'0128':3,'0129':4};
+const DREAMDAY=i=>[0,1,4,5,7].map(r=>TTD[r][1][i]).join('、');
+const TTD=[['9:30',['翻滾體操','跳箱基礎','跳箱遊戲','翻滾體操','跳箱驗收']],['10:30',['攀岩遊戲','小跳床基礎','攀岩挑戰','小跳床進階','攀岩驗收']],0,0,['13:30',['側翻基礎','跑酷基礎','手翻基礎','跑酷路線','側翻驗收']],['14:30',['彈翻床基礎','跑酷遊戲','彈翻床進階','跑酷驗收','彈翻床驗收']],0,['16:30',['長跳床基礎','前空翻體驗','長跳床遊戲','前空翻基礎','小跳床驗收']]];
+const WD={'0121':'四','0122':'五','0125':'一','0126':'二','0127':'三','0128':'四','0129':'五','0201':'一','0202':'二','0203':'三'};
+S.done=S.done||{};
+function kid(){
+ const A=analyse(),L=chosen();
+ const start=new Date(2027,0,21),n=Math.ceil((start-new Date())/864e5);
+ document.getElementById('kcount').innerHTML=n>0?'寒假還有 <b>'+n+'</b> 天':'寒假開始囉！';
+ const cats={};for(const o of L){const k=kidInfo(o);cats[k.n]=k.c}
+ document.getElementById('klegend').innerHTML=Object.keys(cats).map(n=>'<span><i class="ico" style="background:'+KC[cats[n]]+'">'+IC[cats[n]]+'</i>'+n+'</span>').join('');
+ if(!L.length){document.getElementById('kdays').innerHTML='<div class="kempty">爸爸媽媽還沒選好營隊喔！</div>';return}
+ const wk=[['第一週',['0121','0122']],['第二週',['0125','0126','0127','0128','0129']],['第三週',['0201','0202','0203']]];
+ document.getElementById('kdays').innerHTML=wk.map(([w,ds])=>'<div class="kwk">'+w+'</div>'+ds.map(d=>{
+  const its=(A.per[d]||[]).slice().sort((a,b)=>a.s-b.s);
+  return '<button class="kday'+(S.done[d]?' done':'')+'" data-done="'+d+'" aria-pressed="'+!!S.done[d]+'"><span class="kdate"><b>'+lab(d)+'</b><i>星期'+WD[d]+'</i></span><span>'+
+  (its.length?its.map(o=>{const k=kidInfo(o);let d2=k.d;if(o.id==='dream'&&d in DTT)d2=DREAMDAY(DTT[d]);
+   return '<span class="kact"><i class="ico" style="background:'+KC[k.c]+'">'+IC[k.c]+'</i><span><span class="kname">'+k.n+'</span><br><span class="ksub num">'+(o.tu?'':hm(o.s)+'–'+hm(o.e))+'</span>'+(d2?'<br><span class="ksub">'+d2+'</span>':'')+'</span></span>'}).join(''):'<span class="krest">在家休息日</span>')+
+  '</span><span class="stamp">完成！</span></button>'}).join('')).join('');
+}
+function route(){const k=location.hash==='#kid';document.body.classList.toggle('kid',k);if(k){kid();scrollTo(0,0)}}
+addEventListener('hashchange',route);route();
+document.getElementById('kdays').addEventListener('click',e=>{const b=e.target.closest('[data-done]');if(!b)return;const d=b.dataset.done;S.done[d]=S.done[d]?0:1;save();kid()});
+document.getElementById('reset').addEventListener('click',()=>{S.sel={};touch();picker();render()});
+document.getElementById('copy').addEventListener('click',()=>{const txt=summary(),msg=document.getElementById('copied'),ta=document.getElementById('fallback');
+ Promise.resolve().then(()=>navigator.clipboard.writeText(txt)).then(()=>{msg.textContent='已複製，可直接貼到 Line。';ta.style.display='none'}).catch(()=>{ta.value=txt;ta.style.display='block';ta.select();msg.textContent='無法自動複製，請長按下方文字複製。'})});
+}
+</script>
+</body>
+</html>
